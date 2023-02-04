@@ -166,7 +166,7 @@ function NODE(json){
 
 function POD(json){
 
-    this.selflink = json.metadata.selfLink;
+    this.selflink = json.metadata.name;
     this.type = "Pod";
     this.terminateThreshold = 1000;
     this.phase = "";
@@ -270,11 +270,11 @@ function PODSUI(pods, logwindow){
         if (!div){
             div = document.createElement("div");
             div.id = pod.name;
-            div.dataset.selflink = pod.selflink;
+            div.dataset.selflink = pod.name;
             div.classList.add("pod");
             var span = document.createElement("span");
             span.innerHTML = pod.shortname;
-            span.dataset.selflink = pod.selflink;
+            span.dataset.selflink = pod.name;
             div.append(span);
             $("#pod-" + pod.holder).append(div);
             logwindow.Log(pod);
@@ -742,7 +742,7 @@ function BOMBUI(waitingimg, explodeimg){
 }
 
 function PODLIST(json){
-    this.selflink = json.metadata.selfLink;
+    this.selflink = json.metadata.name;
     
     this.items = [];
 

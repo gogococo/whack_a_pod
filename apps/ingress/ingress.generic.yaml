@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: extensions/v1beta1
+
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: wap-ingress
@@ -22,15 +23,23 @@ spec:
   - http:
       paths:
       - path: /api/*
+        pathType: Prefix
         backend:
-          serviceName: api
-          servicePort: 8080
+          service:
+            name: api
+            port:
+              number: 8080
       - path: /admin/*
+        pathType: Prefix
         backend:
-          serviceName: admin
-          servicePort: 8080
+          service:
+            name: admin
+            port:
+              number: 8080
       - path: /*
+        pathType: Prefix
         backend:
-          serviceName: game
-          servicePort: 8080
-    host: whackapod.example.com
+          service:
+            name: game
+            port:
+              number: 8080

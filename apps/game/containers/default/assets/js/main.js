@@ -159,7 +159,7 @@ function bombBlastHandler(e){
     for (var i = 0; i < e.items.length; i++){
         var pod = e.items[i];
         if (pod.status.phase == "Running"){
-            killPod(pod.metadata.selfLink);
+            killPod(pod.metadata.name);
         }
     }
     bombUI.Explode();

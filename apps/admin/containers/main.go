@@ -34,7 +34,7 @@ var (
 )
 
 const (
-	root             = "https://kubernetes"
+	root             = "https://kubernetes.default.svc"
 	selector         = "app=api"
 	defaultTokenPath = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 	defaultCertPath  = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"

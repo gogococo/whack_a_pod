@@ -67,7 +67,7 @@ func listPods() ([]byte, error) {
 }
 
 func deletePod(podname string) ([]byte, error) {
-	url := root + podname
+	url := root + "/api/v1/namespaces/whack-a-pod/pods/" + podname
 
 	b, status, err := queryK8sAPI(url, "DELETE", nil)
 	if err != nil {
@@ -83,7 +83,7 @@ func deletePod(podname string) ([]byte, error) {
 }
 
 func deletePods(node string) ([]byte, error) {
-	url := root + "/api/v1/namespaces/default/pods" + "?labelSelector=" + selector
+	url := root + "/api/apps/v1/namespaces/whack-a-pod/pods" + "?labelSelector=" + selector
 	if len(node) > 0 {
 		fs := "&fieldSelector=spec.nodeName=" + node
 		url += fs
@@ -142,7 +142,7 @@ func toggleNode(nodename string, inactive bool) ([]byte, error) {
 }
 
 func deleteReplicaSet() ([]byte, error) {
-	url := root + "/apis/extensions/v1beta1/namespaces/default/replicasets" + "?labelSelector=" + selector
+	url := root + "/apis/apps/v1/namespaces/whack-a-pod/replicasets" + "?labelSelector=" + selector
 
 	b, status, err := queryK8sAPI(url, "DELETE", nil)
 	if err != nil {
@@ -163,6 +163,7 @@ type minimumDeployment struct {
 	Kind       string `json:"kind,omitempty"`
 	Metadata   struct {
 		Name string `json:"name,omitempty"`
+		Namespace string `json:"namespace,omitempty"`
 	} `json:"metadata,omitempty"`
 	Spec struct {
 		Replicas int `json:"replicas,omitempty"`
@@ -198,7 +199,7 @@ type minimumPort struct {
 }
 
 func createDeployment() ([]byte, error) {
-	selflink := "/apis/extensions/v1beta1/namespaces/default/deployments"
+	selflink := "/apis/apps/v1/namespaces/whack-a-pod/deployments"
 	url := root + selflink
 
 	image := os.Getenv("APIIMAGE")
@@ -212,9 +213,10 @@ func createDeployment() ([]byte, error) {
 	}
 
 	var d minimumDeployment
-	d.APIVersion = "extensions/v1beta1"
+	d.APIVersion = "apps/v1"
 	d.Kind = "Deployment"
 	d.Metadata.Name = "api-deployment"
+	d.Metadata.Namespace = "whack-a-pod"
 	d.Spec.Replicas = 12
 	d.Spec.Selector.MatchLabels = map[string]string{"app": "api"}
 	d.Spec.Strategy.Type = "RollingUpdate"
@@ -237,6 +239,8 @@ func createDeployment() ([]byte, error) {
 	}
 
 	dbytes, err := json.Marshal(d)
+	
+	fmt.Println(string(dbytes))
 	if err != nil {
 		return nil, fmt.Errorf("could not convert deployment to json: %v", err)
 	}
@@ -253,13 +257,13 @@ func createDeployment() ([]byte, error) {
 	if status == http.StatusConflict {
 		return nil, errItemAlreadyExist
 	}
-
+	
 	return b, nil
 
 }
 
 func deleteDeployment(depname string) ([]byte, error) {
-	selflink := "/apis/extensions/v1beta1/namespaces/default/deployments/" + depname
+	selflink := "/apis/apps/v1/namespaces/whack-a-pod/deployments/" + depname
 	url := root + selflink
 
 	b, status, err := queryK8sAPI(url, "DELETE", nil)
