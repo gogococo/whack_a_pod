@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM scratch
-ADD main /
+FROM golang:1.11-alpine
+WORKDIR /app
+COPY *.go ./
+RUN apk add git
+RUN	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o "/main" "./main.go"
 CMD ["/main"]
