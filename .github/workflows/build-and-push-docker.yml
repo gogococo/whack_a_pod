@@ -20,11 +20,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: ./apps/admin/containers
+          - path: ./apps/admin/containers
             image: ghcr.io/${{ github.repository }}/admin
-          - dockerfile: ./apps/game/containers
+          - path: ./apps/game/containers
             image: ghcr.io/${{ github.repository }}/game
-          - dockerfile: ./apps/api/containers
+          - path: ./apps/api/containers
             image: ghcr.io/${{ github.repository }}/api
 
     steps:
