@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: whack-a-pod
+  name: game-deployment
+  labels:
+    app: game
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: game
+  template:
+    metadata:
+      labels:
+        app: game
+    spec:
+      containers:
+      - name: game
+        image: ghcr.io/gogococo/whack_a_pod/game:master
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: whack-a-pod
+  name: game
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+  selector:
+    app: game

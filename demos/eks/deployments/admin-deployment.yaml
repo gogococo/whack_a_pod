@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: whack-a-pod
+  name: admin-deployment
+  labels:
+    app: admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+      - name: admin
+        image: ghcr.io/gogococo/whack_a_pod/admin:master
+        ports:
+        - containerPort: 8080
+        env: 
+        - name: APIIMAGE
+          value: cloudowski/whackapod-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: whack-a-pod
+  name: admin
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+  selector:
+    app: admin
+
+

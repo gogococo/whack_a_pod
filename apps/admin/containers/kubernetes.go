@@ -219,7 +219,7 @@ func createDeployment() ([]byte, error) {
 	d.Metadata.Namespace = "whack-a-pod"
 	d.Spec.Replicas = 12
 	d.Spec.Selector.MatchLabels = map[string]string{"app": "api"}
-	d.Spec.Strategy.Type = "RollingUpdate"
+	d.Spec.Strategy.Type = "Recreate"
 	d.Spec.Template.Metadata.Labels = map[string]string{"app": "api"}
 	d.Spec.Template.Spec.TerminationGracePeriodSeconds = 1
 	d.Spec.Template.Spec.Containers = []minimumContainer{
